@@ -1,0 +1,37 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 6MB
+  application:
+    name: ecogrow
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DB_URI}  # Set environment variable for Database Connection URI
+    username: ${DB_USERNAME} # If Required, Set environment variable DB_USERNAME for database username
+    password: ${DB_PASSWORD} # If Required, Set environment variable DB_PASSWORD for database password
+    hikari:
+      auto-commit: false
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  output:
+    ansi:
+      enabled: always
+server:
+  port: 5000
+
+api:
+  prefix: /api/v1
+
+auth:
+  token:
+    expirationInMils: ${JWT_EXP_TIME} # Set the expiration time in millisecond.
+    jwtSecret: ${JWT_SECRET} # Set a secrete for jwt.
