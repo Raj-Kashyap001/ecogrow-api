@@ -18,21 +18,24 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class ImageService implements IImageService{
+public class ImageService implements IImageService {
     private final ImageRepository imageRepository;
     private final IProductService productService;
+
     @Override
     public Image getImageById(Long id) {
-       return imageRepository.findById(id).orElseThrow(
-               () -> new ResourceNotFoundException("Image not found with id: "+id)
-       );
+        return imageRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Image not found with id: " + id)
+        );
     }
 
     @Override
     public void deleteImageById(Long id) {
         imageRepository.findById(id).ifPresentOrElse(
                 imageRepository::delete,
-                () ->{throw  new ResourceNotFoundException("Image not found with id: " + id);}
+                () -> {
+                    throw new ResourceNotFoundException("Image not found with id: " + id);
+                }
         );
     }
 
@@ -41,30 +44,30 @@ public class ImageService implements IImageService{
         Product product = productService.getProductById(productId);
         List<ImageDto> savedImagesDtos = new ArrayList<>();
         for (MultipartFile file : files) {
-           try {
-               Image image = new Image();
-               image.setFileName(file.getOriginalFilename());
-               image.setFileType(file.getContentType());
-               image.setImageBlob(new SerialBlob(file.getBytes()));
-               image.setProduct(product);
+            try {
+                Image image = new Image();
+                image.setFileName(file.getOriginalFilename());
+                image.setFileType(file.getContentType());
+                image.setImageBlob(new SerialBlob(file.getBytes()));
+                image.setProduct(product);
 
-               String downloadUrl = "/api/v1/images/image/download/";
-               image.setDownloadUrl(downloadUrl+ image.getId());
-               Image savedImage = imageRepository.save(image);
+                String downloadUrl = "/api/v1/images/image/download/";
+                image.setDownloadUrl(downloadUrl + image.getId());
+                Image savedImage = imageRepository.save(image);
 
-               savedImage.setDownloadUrl(downloadUrl + savedImage.getId());
-               imageRepository.save(savedImage);
+                savedImage.setDownloadUrl(downloadUrl + savedImage.getId());
+                imageRepository.save(savedImage);
 
-              ImageDto imageDto = new ImageDto();
-              imageDto.setId(savedImage.getId());
-              imageDto.setImageName(savedImage.getFileName());
-              imageDto.setDownloadUrl(savedImage.getDownloadUrl());
+                ImageDto imageDto = new ImageDto();
+                imageDto.setId(savedImage.getId());
+                imageDto.setImageName(savedImage.getFileName());
+                imageDto.setDownloadUrl(savedImage.getDownloadUrl());
 
-              savedImagesDtos.add(imageDto);
+                savedImagesDtos.add(imageDto);
 
-           } catch (IOException | SQLException e) {
-            throw new RuntimeException(e.getMessage());
-        }
+            } catch (IOException | SQLException e) {
+                throw new RuntimeException(e.getMessage());
+            }
         }
         return savedImagesDtos;
     }

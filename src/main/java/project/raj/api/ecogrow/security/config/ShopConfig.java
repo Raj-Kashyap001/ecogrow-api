@@ -27,17 +27,17 @@ import java.util.List;
 @EnableMethodSecurity(prePostEnabled = true)
 @Configuration
 public class ShopConfig {
+    public static final List<String> SECURED_URLS = List.of("/api/v1/carts/**", "api/v1/cartItem/**");
     private final ShopUserDetailsService shopUserDetailsService;
     private final JwtAuthEntryPoint authEntryPoint;
-    public static final List<String> SECURED_URLS = List.of("/api/v1/carts/**", "api/v1/cartItem/**");
 
     @Bean
-    public ModelMapper modelMapper ()  {
+    public ModelMapper modelMapper() {
         return new ModelMapper();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder () {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -52,7 +52,7 @@ public class ShopConfig {
     }
 
     @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider () {
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(shopUserDetailsService);
         provider.setPasswordEncoder(passwordEncoder());

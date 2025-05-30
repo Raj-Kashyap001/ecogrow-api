@@ -7,13 +7,13 @@ import project.raj.api.ecogrow.dto.ImageDto;
 import project.raj.api.ecogrow.dto.ProductDto;
 import project.raj.api.ecogrow.exceptions.AlreadyExistsException;
 import project.raj.api.ecogrow.exceptions.ResourceNotFoundException;
-import project.raj.api.ecogrow.models.Image;
-import project.raj.api.ecogrow.repository.ImageRepository;
-import project.raj.api.ecogrow.requests.ProductCreateRequest;
 import project.raj.api.ecogrow.models.Category;
+import project.raj.api.ecogrow.models.Image;
 import project.raj.api.ecogrow.models.Product;
 import project.raj.api.ecogrow.repository.CategoryRepository;
+import project.raj.api.ecogrow.repository.ImageRepository;
 import project.raj.api.ecogrow.repository.ProductRepository;
+import project.raj.api.ecogrow.requests.ProductCreateRequest;
 import project.raj.api.ecogrow.requests.ProductUpdateRequest;
 
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ProductService implements IProductService{
+public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ModelMapper modelMapper;
@@ -35,7 +35,7 @@ public class ProductService implements IProductService{
             throw new AlreadyExistsException("Product already exist");
         }
         Category category = Optional.ofNullable(
-                categoryRepository.findByName(request.getCategory().getName()))
+                        categoryRepository.findByName(request.getCategory().getName()))
                 .orElseGet(() -> {
                     Category newCategory = new Category(request.getCategory().getName());
                     return categoryRepository.save(newCategory);
@@ -46,15 +46,15 @@ public class ProductService implements IProductService{
     }
 
     private Product updateExistingProduct(Product existingProduct, ProductUpdateRequest request) {
-           existingProduct.setId(request.getId());
-           existingProduct.setName(request.getName());
-           existingProduct.setDescription(request.getDescription());
-           existingProduct.setBrand(request.getBrand());
-           existingProduct.setPrice(request.getPrice());
-           existingProduct.setInventory(request.getInventory());
-           Category category = categoryRepository.findByName(request.getCategory().getName());
-           existingProduct.setCategory(category);
-           return existingProduct;
+        existingProduct.setId(request.getId());
+        existingProduct.setName(request.getName());
+        existingProduct.setDescription(request.getDescription());
+        existingProduct.setBrand(request.getBrand());
+        existingProduct.setPrice(request.getPrice());
+        existingProduct.setInventory(request.getInventory());
+        Category category = categoryRepository.findByName(request.getCategory().getName());
+        existingProduct.setCategory(category);
+        return existingProduct;
     }
 
     private Product createProduct(ProductCreateRequest request, Category category) {
@@ -64,7 +64,7 @@ public class ProductService implements IProductService{
                 request.getBrand(),
                 request.getPrice(),
                 request.getInventory(),
-             category
+                category
         );
     }
 
@@ -82,7 +82,9 @@ public class ProductService implements IProductService{
     public void deleteProductById(Long id) {
         productRepository.findById(id)
                 .ifPresentOrElse(productRepository::delete,
-                        () -> {throw new ResourceNotFoundException("Product not found!");});
+                        () -> {
+                            throw new ResourceNotFoundException("Product not found!");
+                        });
     }
 
     @Override
@@ -115,7 +117,7 @@ public class ProductService implements IProductService{
 
     @Override
     public List<Product> getAllProductByNameAndBrand(String name, String brandName) {
-        return productRepository.findByNameAndBrandIgnoreCase(name,brandName);
+        return productRepository.findByNameAndBrandIgnoreCase(name, brandName);
     }
 
     @Override

@@ -1,8 +1,5 @@
 package project.raj.api.ecogrow.services.order;
 
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -17,12 +14,15 @@ import project.raj.api.ecogrow.repository.ProductRepository;
 import project.raj.api.ecogrow.services.cart.CartService;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
 
 import static project.raj.api.ecogrow.enums.OrderStatus.PENDING;
 
 @Service
 @RequiredArgsConstructor
-public class OrderService implements IOrderService{
+public class OrderService implements IOrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final CartService cartService;
@@ -46,10 +46,10 @@ public class OrderService implements IOrderService{
     @Override
     public OrderDto getOrder(Long orderId) {
         return orderRepository.findById(orderId).map(this::convertToOrderDto)
-                .orElseThrow(()-> new ResourceNotFoundException("Order not found!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found!"));
     }
 
-    private Order createOrder( Cart cart) {
+    private Order createOrder(Cart cart) {
         Order order = new Order();
         order.setUser(cart.getUser());
         order.setOrderStatus(PENDING);
@@ -72,14 +72,14 @@ public class OrderService implements IOrderService{
 
     private BigDecimal getTotalPrice(List<OrderItem> orderItemList) {
         return orderItemList.stream().map(item -> item.getPrice()
-                .multiply(BigDecimal.valueOf(item.getQuantity())))
+                        .multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     @Override
     public List<OrderDto> getUserOrder(Long userId) {
-         List<Order> orders = orderRepository.findByUserId(userId);
-         return orders.stream().map(this::convertToOrderDto).toList();
+        List<Order> orders = orderRepository.findByUserId(userId);
+        return orders.stream().map(this::convertToOrderDto).toList();
     }
 
     @Override

@@ -7,6 +7,6 @@ import project.raj.api.ecogrow.models.CartItem;
 
 
 @Repository
-public interface CartItemRepository extends JpaRepository<CartItem,Long> {
+public interface CartItemRepository extends JpaRepository<CartItem, Long> {
     void deleteAllByCart(Cart cart);
 }

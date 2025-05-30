@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class SeedUsers implements ApplicationListener<ContextRefreshedEvent> {
-    
+
     private static final int DEFAULT_USER_COUNT = 4;
     private static final String DEFAULT_PASSWORD = "1233";
     private static final String DEFAULT_LAST_NAME = "Demo";
@@ -41,19 +41,19 @@ public class SeedUsers implements ApplicationListener<ContextRefreshedEvent> {
         createDefaultAdminIfNotExist();
         seedDefaultUsersIfNotExist();
     }
-    
+
     @Transactional
     protected void seedDefaultUsersIfNotExist() {
         for (int i = 1; i <= DEFAULT_USER_COUNT; i++) {
             String email = String.format(EMAIL_PATTERN, i);
-            
+
             if (!userRepository.existsByEmail(email)) {
                 createAndSaveUser(i, email);
                 log.info("User {} created!", i);
             }
         }
     }
-    
+
     @Transactional
     protected void createAndSaveUser(int userNumber, String email) {
         User user = new User();

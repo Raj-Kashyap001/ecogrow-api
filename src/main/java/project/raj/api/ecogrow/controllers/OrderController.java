@@ -24,13 +24,13 @@ public class OrderController {
 
     @GetMapping("/order/{orderId}")
     public ResponseEntity<ApiResponse> getOrderById(@PathVariable Long orderId) {
-       try {
-           OrderDto order = orderService.getOrder(orderId);
-           return ResponseEntity.ok(new ApiResponse("Found: ", order));
-       } catch (ResourceNotFoundException e) {
-           return ResponseEntity.status(NOT_FOUND)
-                   .body(new ApiResponse("Order Not Found", null));
-       }
+        try {
+            OrderDto order = orderService.getOrder(orderId);
+            return ResponseEntity.ok(new ApiResponse("Found: ", order));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(NOT_FOUND)
+                    .body(new ApiResponse("Order Not Found", null));
+        }
     }
 
     @GetMapping("/order/user/{userId}")
@@ -45,8 +45,7 @@ public class OrderController {
     }
 
 
-   // TODO: Add a controller for canceling order
-
+    // TODO: Add a controller for canceling order
 
 
     @Transactional

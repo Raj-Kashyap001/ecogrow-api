@@ -16,10 +16,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ShopUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = Optional.of(userRepository.findByEmail(username))
-                .orElseThrow(() ->new UsernameNotFoundException("User not found with email!"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email!"));
         return ShopUserDetails.buildUserDetails(user);
     }
 }

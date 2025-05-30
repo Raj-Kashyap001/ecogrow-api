@@ -7,7 +7,7 @@ import project.raj.api.ecogrow.models.Product;
 import java.util.List;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product,Long> {
+public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByCategoryNameIgnoreCase(String categoryName);
 
     List<Product> findByBrandIgnoreCase(String brandName);
@@ -18,5 +18,5 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
 
     List<Product> findByNameIgnoreCase(String name);
 
-    boolean existsByNameAndBrand(String name,String brandName);
+    boolean existsByNameAndBrand(String name, String brandName);
 }

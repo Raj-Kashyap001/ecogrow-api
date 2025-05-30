@@ -19,14 +19,14 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements IUserService{
+public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDto getUserById(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found with id: "+userId));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
         return modelMapper.map(user, UserDto.class);
     }
 
@@ -42,16 +42,16 @@ public class UserService implements IUserService{
                     user.setLastName(req.getLastName());
                     User savedUser = userRepository.save(user);
                     return modelMapper.map(savedUser, UserDto.class);
-                }).orElseThrow(()-> new AlreadyExistsException("User Already Exists with email: "+request.getEmail()));
+                }).orElseThrow(() -> new AlreadyExistsException("User Already Exists with email: " + request.getEmail()));
     }
 
     @Override
     public UserDto updateUser(UserUpdateRequest request, Long userId) {
-         return userRepository.findById(userId).map(existingUser -> {
-           existingUser.setFirstName(request.getFirstName());
-           existingUser.setLastName(request.getLastName());
-          User updatedUser = userRepository.save(existingUser);
-          return modelMapper.map(updatedUser, UserDto.class);
+        return userRepository.findById(userId).map(existingUser -> {
+            existingUser.setFirstName(request.getFirstName());
+            existingUser.setLastName(request.getLastName());
+            User updatedUser = userRepository.save(existingUser);
+            return modelMapper.map(updatedUser, UserDto.class);
         }).orElseThrow(() -> new ResourceNotFoundException("User not found!"));
     }
 
@@ -69,7 +69,8 @@ public class UserService implements IUserService{
         String email = authentication.getName();
         User user = userRepository.findByEmail(email);
         if (user == null) {
-            throw new AuthenticationException("User not authenticated. Please login again.") {};
+            throw new AuthenticationException("User not authenticated. Please login again.") {
+            };
         }
         return user;
     }

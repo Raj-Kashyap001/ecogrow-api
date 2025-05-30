@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 @RequiredArgsConstructor
-public class CartService implements ICartService{
+public class CartService implements ICartService {
 
     public final CartRepository cartRepository;
     public final CartItemRepository cartItemRepository;
@@ -25,7 +25,7 @@ public class CartService implements ICartService{
     @Override
     public Cart getCart(Long id) {
         Cart cart = cartRepository.findById(id)
-                .orElseThrow(()-> new ResourceNotFoundException("Cart not found!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Cart not found!"));
         System.out.println(cart.toString());
         BigDecimal totalAmount = cart.getTotalAmount();
         cart.setTotalAmount(totalAmount);

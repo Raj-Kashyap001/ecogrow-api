@@ -23,19 +23,19 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @RequestMapping("${api.prefix}/images")
 @RequiredArgsConstructor
 public class ImageController {
-    private  final IImageService imageService;
+    private final IImageService imageService;
 
     @PostMapping("/upload")
     public ResponseEntity<ApiResponse> saveImages(@RequestParam List<MultipartFile> files, @RequestParam Long productId) {
         try {
-            List<ImageDto> imageDtos = imageService.saveImages(files,productId);
+            List<ImageDto> imageDtos = imageService.saveImages(files, productId);
             return ResponseEntity
                     .ok(new ApiResponse
-                    ("Upload success",imageDtos));
+                            ("Upload success", imageDtos));
         } catch (Exception e) {
-           return ResponseEntity
-                   .status(INTERNAL_SERVER_ERROR)
-                   .body(new ApiResponse("Upload failed", e.getMessage()));
+            return ResponseEntity
+                    .status(INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse("Upload failed", e.getMessage()));
         }
 
     }
@@ -44,10 +44,10 @@ public class ImageController {
     public ResponseEntity<ByteArrayResource> downloadImage(@PathVariable Long imageId) throws SQLException {
         Image image = imageService.getImageById(imageId);
         ByteArrayResource resource = new ByteArrayResource
-                (image.getImageBlob().getBytes(1,(int) image.getImageBlob().length()));
-        return  ResponseEntity.ok()
+                (image.getImageBlob().getBytes(1, (int) image.getImageBlob().length()));
+        return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(image.getFileType()))
-                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=\"" +image.getFileName()+"\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getFileName() + "\"")
                 .body(resource);
     }
 
@@ -56,20 +56,21 @@ public class ImageController {
         try {
             Image image = imageService.getImageById(imageId);
             if (image != null) {
-               imageService.updateImage(file, imageId);
-               return ResponseEntity.ok(new ApiResponse("Update Success", null));
+                imageService.updateImage(file, imageId);
+                return ResponseEntity.ok(new ApiResponse("Update Success", null));
             }
         } catch (ResourceAccessException e) {
             return ResponseEntity.status(NOT_FOUND)
                     .body(new ApiResponse(
                             e.getMessage(),
-                            null)) ;
+                            null));
         }
         return ResponseEntity.status(INTERNAL_SERVER_ERROR)
                 .body(new ApiResponse
                         ("Update Failed!",
-                            INTERNAL_SERVER_ERROR));
+                                INTERNAL_SERVER_ERROR));
     }
+
     @DeleteMapping("/image/{imageId}/delete")
     public ResponseEntity<ApiResponse> deleteImage(@PathVariable Long imageId, @RequestBody MultipartFile file) {
         try {
@@ -82,7 +83,7 @@ public class ImageController {
             return ResponseEntity.status(NOT_FOUND)
                     .body(new ApiResponse(
                             e.getMessage(),
-                            null)) ;
+                            null));
         }
         return ResponseEntity.status(INTERNAL_SERVER_ERROR)
                 .body(new ApiResponse

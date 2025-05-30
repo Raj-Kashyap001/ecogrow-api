@@ -33,6 +33,7 @@ public class JwtUtils {
                 .setExpiration(new Date(new Date().getTime() + jwtExpirationTime))
                 .signWith(key(), SignatureAlgorithm.HS256).compact();
     }
+
     private Key key() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
@@ -43,13 +44,14 @@ public class JwtUtils {
                 .parseClaimsJws(token)
                 .getBody().getSubject();
     }
+
     public boolean validateJwtToken(String authToken) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(key())
                     .build().parseClaimsJws(authToken);
             return true;
-        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException |  IllegalArgumentException e) {
+        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | IllegalArgumentException e) {
             throw new JwtException(e.getMessage());
         }
     }

@@ -28,13 +28,13 @@ public class Cart {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public void addItem (CartItem cartItem) {
+    public void addItem(CartItem cartItem) {
         this.items.add(cartItem);
         cartItem.setCart(this);
         updateTotalAmount();
     }
 
-    public void removeItem(CartItem cartItem){
+    public void removeItem(CartItem cartItem) {
         this.items.remove(cartItem);
         cartItem.setCart(null);
         updateTotalAmount();
@@ -43,7 +43,9 @@ public class Cart {
     public void updateTotalAmount() {
         this.totalAmount = items.stream().map(item -> {
             BigDecimal unitPrice = item.getUnitPrice();
-            if (unitPrice == null) { return BigDecimal.ZERO;}
+            if (unitPrice == null) {
+                return BigDecimal.ZERO;
+            }
             return unitPrice.multiply(BigDecimal.valueOf(item.getQuantity()));
         }).reduce(BigDecimal.ZERO, BigDecimal::add);
     }

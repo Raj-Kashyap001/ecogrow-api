@@ -7,8 +7,11 @@ import project.raj.api.ecogrow.requests.UserUpdateRequest;
 
 public interface IUserService {
     UserDto getUserById(Long userId);
+
     UserDto createUser(UserCreateRequest request);
+
     UserDto updateUser(UserUpdateRequest request, Long userId);
+
     void deleteUser(Long userId);
 
     User getAuthenticatedUser();

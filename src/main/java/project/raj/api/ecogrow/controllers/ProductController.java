@@ -22,30 +22,30 @@ import static org.springframework.http.HttpStatus.*;
 @RequestMapping("${api.prefix}/product")
 @RequiredArgsConstructor
 public class ProductController {
-   private final IProductService productService;
+    private final IProductService productService;
     private final ModelMapper modelMapper;
 
     @GetMapping("/products/all")
     public ResponseEntity<ApiResponse> getAllProducts() {
-       try {
-           List<Product> products = productService.getAllProducts();
-           List<ProductDto> productDtos = productService.convertToDtos(products);
-           return ResponseEntity.ok(new ApiResponse("success", productDtos));
-       } catch (Exception e) {
-           return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Error: ", e.getMessage()));
-       }
-   }
+        try {
+            List<Product> products = productService.getAllProducts();
+            List<ProductDto> productDtos = productService.convertToDtos(products);
+            return ResponseEntity.ok(new ApiResponse("success", productDtos));
+        } catch (Exception e) {
+            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Error: ", e.getMessage()));
+        }
+    }
 
-   @GetMapping("/{productId}")
-   public ResponseEntity<ApiResponse> getProductById(@PathVariable Long productId) {
-       try {
+    @GetMapping("/{productId}")
+    public ResponseEntity<ApiResponse> getProductById(@PathVariable Long productId) {
+        try {
             Product product = productService.getProductById(productId);
             ProductDto productDto = productService.convertToDto(product);
             return ResponseEntity.ok(new ApiResponse("success", productDto));
-       } catch (ResourceNotFoundException e) {
-           return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(),null));
-       }
-   }
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+        }
+    }
 
     // Get all the product with query parameters
     @GetMapping("/products/by")
@@ -88,41 +88,40 @@ public class ProductController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/products/add")
-  public ResponseEntity<ApiResponse> addProduct(@RequestBody ProductCreateRequest request) {
-      try {
-          Product product = productService.addProduct(request);
-          ProductDto productDto = modelMapper.map(product, ProductDto.class);
-          return ResponseEntity.ok(new ApiResponse("product added successfully!", productDto));
-      } catch (AlreadyExistsException e) {
-          return ResponseEntity.status(CONFLICT)
-                  .body(new ApiResponse(e.getMessage(), null));
-      }
-  }
+    public ResponseEntity<ApiResponse> addProduct(@RequestBody ProductCreateRequest request) {
+        try {
+            Product product = productService.addProduct(request);
+            ProductDto productDto = modelMapper.map(product, ProductDto.class);
+            return ResponseEntity.ok(new ApiResponse("product added successfully!", productDto));
+        } catch (AlreadyExistsException e) {
+            return ResponseEntity.status(CONFLICT)
+                    .body(new ApiResponse(e.getMessage(), null));
+        }
+    }
 
-  @PreAuthorize("hasRole('ROLE_ADMIN')")
-  @PutMapping("/{productId}/update")
-  public ResponseEntity<ApiResponse> updateProduct(@RequestBody ProductUpdateRequest request, @PathVariable Long productId) {
-      try {
-          Product product = productService.getProductById(productId);
-          ProductDto productDto = productService.convertToDto(product);
-          return ResponseEntity.ok(new ApiResponse("product updated successfully!", productDto));
-      } catch (ResourceNotFoundException e) {
-          return ResponseEntity.status(NOT_FOUND)
-                  .body(new ApiResponse(e.getMessage(), null));
-      }
-  }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping("/{productId}/update")
+    public ResponseEntity<ApiResponse> updateProduct(@RequestBody ProductUpdateRequest request, @PathVariable Long productId) {
+        try {
+            Product updatedProduct = productService.updateProductById(productId, request);
+            ProductDto productDto = productService.convertToDto(updatedProduct);
+            return ResponseEntity.ok(new ApiResponse("product updated successfully!", productDto));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(NOT_FOUND)
+                    .body(new ApiResponse(e.getMessage(), null));
+        }
+    }
 
-  @PreAuthorize("hasRole('ROLE_ADMIN')")
-  @DeleteMapping("/{productId}/delete")
-  public ResponseEntity<ApiResponse> deleteProduct(@PathVariable Long productId){
-      try {
-          productService.deleteProductById(productId);
-          return ResponseEntity.ok(new ApiResponse("product deleted successfully!", null));
-      } catch (ResourceNotFoundException e) {
-          return ResponseEntity.status(NOT_FOUND)
-                  .body(new ApiResponse(e.getMessage(), null));
-      }
-  }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("/{productId}/delete")
+    public ResponseEntity<ApiResponse> deleteProduct(@PathVariable Long productId) {
+        try {
+            productService.deleteProductById(productId);
+            return ResponseEntity.ok(new ApiResponse("product deleted successfully!", null));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(NOT_FOUND)
+                    .body(new ApiResponse(e.getMessage(), null));
+        }
+    }
 
 }
-
