@@ -7,9 +7,9 @@ spring:
     name: ecogrow
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${DB_URI}  # Set environment variable for Database Connection URI
-    username: ${DB_USERNAME} # If Required, Set environment variable DB_USERNAME for database username
-    password: ${DB_PASSWORD} # If Required, Set environment variable DB_PASSWORD for database password
+    url: ${DB_URI}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     hikari:
       auto-commit: false
   jpa:
@@ -33,5 +33,5 @@ api:
 
 auth:
   token:
-    expirationInMils: ${JWT_EXP_TIME} # Set the expiration time in millisecond.
-    jwtSecret: ${JWT_SECRET} # Set a secrete for jwt.
+    expirationInMils: ${JWT_EXPIRE_TIME}
+    jwtSecret: ${JWT_SECRET}

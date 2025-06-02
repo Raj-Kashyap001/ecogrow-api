@@ -29,7 +29,7 @@ public class ProductService implements IProductService {
 
     @Override
     public Product addProduct(ProductCreateRequest request) {
-        // If a category is found on db then set it that category
+        // If a category is found on db, then set it that category
         // creates a new category and then save it.
         if (productExist(request.getName(), request.getBrand())) {
             throw new AlreadyExistsException("Product already exist");
